@@ -6,7 +6,7 @@ endif
 
 # make sure the the OF_ROOT location is defined
 ifndef OF_ROOT
-    OF_ROOT=$(realpath ../../../Resources/OpenFrameworks)
+    OF_ROOT=$(realpath ../../../Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks/Resources/OpenFrameworks)
 endif
 
 # call the project makefile!
