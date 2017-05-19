@@ -38,8 +38,8 @@ void ofApp::setup() {
     _filters.push_back(new ZoomBlurFilter());
     _filters.push_back(new EmbossFilter(cam.getWidth(), cam.getHeight(), 2.f));
     _filters.push_back(new SmoothToonFilter(cam.getWidth(), cam.getHeight()));
-    _filters.push_back(new TiltShiftFilter(cam.getTextureReference()));
-    _filters.push_back(new VoronoiFilter(cam.getTextureReference()));
+    _filters.push_back(new TiltShiftFilter(cam.getTexture()));
+    _filters.push_back(new VoronoiFilter(cam.getTexture()));
     _filters.push_back(new CGAColorspaceFilter());
     _filters.push_back(new ErosionFilter(cam.getWidth(), cam.getHeight()));
     _filters.push_back(new LookupFilter(cam.getWidth(), cam.getHeight(), "img/lookup_amatorka.png"));
@@ -49,21 +49,22 @@ void ofApp::setup() {
     _filters.push_back(new PosterizeFilter(8));
     _filters.push_back(new LaplacianFilter(cam.getWidth(), cam.getHeight(), ofVec2f(1, 1)));
     _filters.push_back(new PixelateFilter(cam.getWidth(), cam.getHeight()));
-    _filters.push_back(new HarrisCornerDetectionFilter(cam.getTextureReference()));
-    _filters.push_back(new MotionDetectionFilter(cam.getTextureReference()));
+    _filters.push_back(new HarrisCornerDetectionFilter(cam.getTexture()));
+    _filters.push_back(new MotionDetectionFilter(cam.getTexture()));
     _filters.push_back(new LowPassFilter(cam.getWidth(), cam.getHeight(), 0.9));
     
     // blending examples
     
     ofImage wes = ofImage("img/wes.jpg");
     ChromaKeyBlendFilter * chroma = new ChromaKeyBlendFilter(ofVec3f(0.f, 1.f, 0.f), 0.4);
-    chroma->setSecondTexture(wes.getTextureReference());
+    chroma->setSecondTexture(wes.getTexture());
     _filters.push_back(chroma);
     
     _filters.push_back(new DisplacementFilter("img/mandel.jpg", cam.getWidth(), cam.getHeight(), 25.f));
-    _filters.push_back(new PoissonBlendFilter(wes.getTextureReference(), cam.getWidth(), cam.getHeight(), 2.0));
-    _filters.push_back(new DisplacementFilter("img/glass/3.jpg", cam.getWidth(), cam.getHeight(), 40.0));
-    _filters.push_back(new ExclusionBlendFilter(wes.getTextureReference()));
+    _filters.push_back(new PoissonBlendFilter(wes.getTexture(), cam.getWidth(), cam.getHeight(), 2.0));
+    _filters.push_back(new DisplacementFilter("img/glass/3.jpg", cam.getWidth(), cam.getHeight(), 200.0));
+    _filters.push_back(new DisplacementFilter("img/mesh.png", cam.getWidth(), cam.getHeight(), 100.0));
+    _filters.push_back(new ExclusionBlendFilter(wes.getTexture()));
     
     
     
@@ -111,10 +112,15 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
-	cam.update();
-	if(cam.isFrameNew()) {
-		tracker.update(toCv(cam));
-	}
+	
+    cam.update();
+    
+    if(!filtersOn)
+    {
+        if(cam.isFrameNew()) {
+            tracker.update(toCv(cam));
+        }
+    }
 }
 
 void ofApp::draw() {
@@ -123,29 +129,35 @@ void ofApp::draw() {
     ofPushMatrix();
     ofScale(-1, 1);
     ofTranslate(-cam.getWidth(), 0);
-    _filters[_currentFilter]->begin();
-    cam.draw(0,0);
-    _filters[_currentFilter]->end();
-    ofPopMatrix();
-    ofSetColor(255);
-    ofDrawBitmapString( _filters[_currentFilter]->getName() + " Filter\n(press SPACE to change filters)", ofPoint(40, 20));
     
-      if(ofGetKeyPressed()) {
+    if(filtersOn)
+    {
+        _filters[_currentFilter]->begin();
+        cam.draw(0,0);
+        _filters[_currentFilter]->end();
+        ofPopMatrix();
         ofSetColor(255);
-        cam.draw(0, 0);
-        ofSetColor(255, 32);
-        ofSetLineWidth(1);
-        tracker.getImageMesh().drawWireframe();
-        tracker.draw(true);
+        ofDrawBitmapString( _filters[_currentFilter]->getName() + " Filter\n(Press SPACE to change filters)", ofPoint(40, 20));
     }
-    ofSetColor(255);
-    ofSetLineWidth(2);
-    ofPushStyle();
-    ofNoFill();
-    ofSetColor(255);
-    overlay.draw(tracker);
-    ofPopStyle();
-	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+    else
+    {
+        cam.draw(0, 0);
+        ofPopMatrix();
+        ofSetColor(255);
+        ofDrawBitmapString("Press 'f' to turn on filters", ofPoint(40, 20));
+        
+        ofPushStyle();
+        ofNoFill();
+        ofSetColor(255);
+        ofSetLineWidth(1);
+        //    tracker.getImageMesh().drawWireframe();
+        ofSetLineWidth(2);
+        //    overlay.draw(tracker);
+        tracker.draw(false);
+        ofPopStyle();
+    }
+    
+    ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
 }
 
 void ofApp::keyPressed(int key) {
@@ -154,9 +166,15 @@ void ofApp::keyPressed(int key) {
 	}
     
     if (key==' ') {
-        _currentFilter ++;
-        if (_currentFilter>=_filters.size()) _currentFilter = 0;
+        if(filtersOn)
+        {
+            _currentFilter++;
+            if (_currentFilter >= _filters.size()) _currentFilter = 0;
+        }
     }
-    else if (key=='f') ofToggleFullscreen();
-
+    
+    else if (key=='f')
+    {
+        filtersOn = !filtersOn;
+    }
 }

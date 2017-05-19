@@ -22,4 +22,6 @@ private:
     ofVideoGrabber cam;
     ofxFaceTracker tracker;
     FaceOverlay overlay;
+    
+    bool filtersOn = false;
 };

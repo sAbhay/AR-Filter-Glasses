@@ -92,8 +92,8 @@ public:
         ofVec2f eyeRightLidLeft = tracker.getImagePoint(42).getInterpolated(tracker.getImagePoint(43), lidHeight);
         ofVec2f eyeRightLidRight = tracker.getImagePoint(44).getInterpolated(tracker.getImagePoint(45), lidHeight);
         
-        ofVec2f eyeCenterLeft = eyeLeftLidLeft.getInterpolated(eyeLeftLidRight, .5);
-        ofVec2f eyeCenterRight = eyeRightLidLeft.getInterpolated(eyeRightLidRight, .5);
+        ofVec2f eyeCenterLeft = eyeLeftLidLeft.getInterpolated(eyeLeftLidRight, .25);
+        ofVec2f eyeCenterRight = eyeRightLidLeft.getInterpolated(eyeRightLidRight, .25);
         
         float irisSize = .5;
         ofMesh leftTop, leftBottom;
