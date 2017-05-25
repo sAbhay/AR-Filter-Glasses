@@ -74,92 +74,22 @@ public:
         mouthHysteresis.setDelay(1000);
     }
     void draw(ofxFaceTracker& tracker) {
-        if(noseHysteresis.set(abs(tracker.getOrientation().y) > ofDegToRad(noseAngle))) {
-            tracker.getImageFeature(ofxFaceTracker::NOSE_BRIDGE).draw();
+        
+        ofFill();
+        ofSetColor(255, 0, 0);
+        
+        ofBeginShape();
+        
+        vector<ofVec3f> points = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE).getVertices();
+        
+        for(int i = 0; i < points.size(); i++)
+        {
+            ofVertex(points.at(i));
         }
         
-        ofPolyline eyeLeft = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
-        ofPolyline eyeRight = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE);
-        ofVec2f eyeLeftLeft = tracker.getImagePoint(36);
-        ofVec2f eyeLeftRight = tracker.getImagePoint(39);
-        ofVec2f eyeRightLeft = tracker.getImagePoint(42);
-        ofVec2f eyeRightRight = tracker.getImagePoint(45);
-        float eyeRadius = tracker.getScale() * 3;
+        ofEndShape();
         
-        float lidHeight = .5;
-        ofVec2f eyeLeftLidLeft = tracker.getImagePoint(36).getInterpolated(tracker.getImagePoint(37), lidHeight);
-        ofVec2f eyeLeftLidRight = tracker.getImagePoint(38).getInterpolated(tracker.getImagePoint(39), lidHeight);
-        ofVec2f eyeRightLidLeft = tracker.getImagePoint(42).getInterpolated(tracker.getImagePoint(43), lidHeight);
-        ofVec2f eyeRightLidRight = tracker.getImagePoint(44).getInterpolated(tracker.getImagePoint(45), lidHeight);
-        
-        ofVec2f eyeCenterLeft = eyeLeftLidLeft.getInterpolated(eyeLeftLidRight, .25);
-        ofVec2f eyeCenterRight = eyeRightLidLeft.getInterpolated(eyeRightLidRight, .25);
-        
-        float irisSize = .5;
-        ofMesh leftTop, leftBottom;
-        ofPolyline leftCircle = buildCircle(eyeCenterLeft, eyeRadius * irisSize);
-        divide(leftCircle, eyeLeftLidLeft, eyeLeftLidRight, leftTop, leftBottom);
-        ofMesh rightTop, rightBottom;
-        ofPolyline rightCircle = buildCircle(eyeCenterRight, eyeRadius * irisSize);
-        divide(rightCircle, eyeRightLidLeft, eyeRightLidRight, rightTop, rightBottom);
-        
-        leftBottom.draw();
-        rightBottom.draw();
-        
-        ofPolyline lowerLip;
-        lowerLip.addVertex(tracker.getImagePoint(59).getInterpolated(tracker.getImagePoint(48), lipWidth));
-        lowerLip.addVertex(tracker.getImagePoint(59));
-        lowerLip.addVertex(tracker.getImagePoint(58));
-        lowerLip.addVertex(tracker.getImagePoint(57));
-        lowerLip.addVertex(tracker.getImagePoint(56));
-        lowerLip.addVertex(tracker.getImagePoint(55));
-        lowerLip.addVertex(tracker.getImagePoint(55).getInterpolated(tracker.getImagePoint(54), lipWidth));
-        drawCurve(lowerLip);
-        
-        ofPolyline innerLip;
-        innerLip.addVertex(tracker.getImagePoint(60).getInterpolated(tracker.getImagePoint(48), lipWidth));
-        innerLip.addVertex(tracker.getImagePoint(60));
-        innerLip.addVertex(tracker.getImagePoint(61));
-        innerLip.addVertex(tracker.getImagePoint(62));
-        innerLip.addVertex(tracker.getImagePoint(62).getInterpolated(tracker.getImagePoint(54), lipWidth));
-        drawCurve(innerLip);
-        
-        // if mouth is open than some amount, draw this line
-        if(mouthHysteresis.set(tracker.getGesture(ofxFaceTracker::MOUTH_HEIGHT) > 2)) {
-            ofPolyline innerLowerLip;
-            innerLowerLip.addVertex(tracker.getImagePoint(65).getInterpolated(tracker.getImagePoint(48), lipWidth));
-            innerLowerLip.addVertex(tracker.getImagePoint(65));
-            innerLowerLip.addVertex(tracker.getImagePoint(64));
-            innerLowerLip.addVertex(tracker.getImagePoint(63));
-            innerLowerLip.addVertex(tracker.getImagePoint(63).getInterpolated(tracker.getImagePoint(54), lipWidth));
-            drawCurve(innerLowerLip);
-        }
-        
-        // nose
-        ofPolyline nose;
-        nose.addVertex(tracker.getImagePoint(31).getInterpolated(tracker.getImagePoint(4), nostrilWidth));
-        nose.addVertex(tracker.getImagePoint(31));
-        nose.addVertex(tracker.getImagePoint(32));
-        nose.addVertex(tracker.getImagePoint(33));
-        nose.addVertex(tracker.getImagePoint(34));
-        nose.addVertex(tracker.getImagePoint(35));
-        nose.addVertex(tracker.getImagePoint(35).getInterpolated(tracker.getImagePoint(12), nostrilWidth));
-        drawCurve(nose);
-        
-        ofPolyline upperLip;
-        upperLip.addVertex(tracker.getImagePoint(49).getInterpolated(tracker.getImagePoint(48), lipWidth));
-        upperLip.addVertex(tracker.getImagePoint(49));
-        upperLip.addVertex(tracker.getImagePoint(50));
-        upperLip.addVertex(tracker.getImagePoint(51));
-        upperLip.addVertex(tracker.getImagePoint(52));
-        upperLip.addVertex(tracker.getImagePoint(53));
-        upperLip.addVertex(tracker.getImagePoint(53).getInterpolated(tracker.getImagePoint(54), lipWidth));
-        drawCurve(upperLip);
-        
-        drawCurve(tracker.getImageFeature(ofxFaceTracker::LEFT_EYE_TOP));
-        drawCurve(tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE_TOP));
-        drawCurve(tracker.getImageFeature(ofxFaceTracker::LEFT_EYEBROW));
-        drawCurve(tracker.getImageFeature(ofxFaceTracker::RIGHT_EYEBROW));
-        drawCurve(tracker.getImageFeature(ofxFaceTracker::JAW));
+//        ofSetColor(0);
+        drawCurve(tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE));
     }
 };

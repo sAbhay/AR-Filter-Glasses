@@ -23,5 +23,7 @@ private:
     ofxFaceTracker tracker;
     FaceOverlay overlay;
     
-    bool filtersOn = false;
+    bool filtersOn = true;
+    
+    ofImage img;
 };

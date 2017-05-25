@@ -2,17 +2,17 @@
 
 using namespace ofxCv;
 
-void ofApp::setup() {
-	cam.initGrabber(1280, 720);
-    ofBackground(0);
-	tracker.setup();
-    
+void ofApp::setup()
+{
     ofDisableArbTex();
     ofEnableSmoothing();
     ofEnableAlphaBlending();
     cam.initGrabber(1280, 720);
-    _currentFilter = 0;
     
+    ofBackground(0);
+	tracker.setup();
+    tracker.reset();
+    _currentFilter = 0;
     
     // here's a simple filter chain
     
@@ -23,8 +23,6 @@ void ofApp::setup() {
     _filters.push_back(charcoal);
     
     // Basic filter examples
-    
-    
     
     _filters.push_back(new HalftoneFilter(cam.getWidth(), cam.getHeight(), 0.01));
     _filters.push_back(new CrosshatchFilter(cam.getWidth(), cam.getHeight()));
@@ -117,7 +115,8 @@ void ofApp::update() {
     
     if(!filtersOn)
     {
-        if(cam.isFrameNew()) {
+        if(cam.isFrameNew())
+        {
             tracker.update(toCv(cam));
         }
     }
@@ -142,6 +141,7 @@ void ofApp::draw() {
     else
     {
         cam.draw(0, 0);
+        
         ofPopMatrix();
         ofSetColor(255);
         ofDrawBitmapString("Press 'f' to turn on filters", ofPoint(40, 20));
@@ -152,8 +152,8 @@ void ofApp::draw() {
         ofSetLineWidth(1);
         //    tracker.getImageMesh().drawWireframe();
         ofSetLineWidth(2);
-        //    overlay.draw(tracker);
-        tracker.draw(false);
+        overlay.draw(tracker);
+//        tracker.draw(true);
         ofPopStyle();
     }
     
@@ -165,11 +165,19 @@ void ofApp::keyPressed(int key) {
 		tracker.reset();
 	}
     
-    if (key==' ') {
+    if (key == OF_KEY_RIGHT) {
         if(filtersOn)
         {
             _currentFilter++;
             if (_currentFilter >= _filters.size()) _currentFilter = 0;
+        }
+    }
+    else if(key == OF_KEY_LEFT)
+    {
+        if(filtersOn)
+        {
+            _currentFilter--;
+            if (_currentFilter <= 0) _currentFilter = _filters.size() - 1;
         }
     }
     
