@@ -10,20 +10,20 @@
 
 Button::Button()
 {
-    pos = dimensions = ofVec2f(0, 0);
-    text = "";
+
 }
 
-Button::Button(float x, float y, float h, string t)
+Button::Button(float x, float y, float s, string i, bool stateB, bool startState)
 {
     pos = ofVec2f(x, y);
-    dimensions = ofVec2f(0, h);
-    text = t;
+    size = s;
+
+    ofLoadImage(img, i);
     
-    dimensions.x = text.length() * 20*ofGetWidth()/1024;
+    img.resize(size, size);
     
-    pos.x -= dimensions.x/2;
-    pos.y -= dimensions.y/2;
+    stateButton = stateB;
+    on = startState;
 }
 
 Button::~Button()
@@ -33,17 +33,33 @@ Button::~Button()
 
 void Button::display()
 {
-    ofFill();
-    ofSetColor(128);
-    ofDrawRectangle(pos.x, pos.y, dimensions.x, dimensions.y);
+    if(!hidden)
+    {
+        ofFill();
+        ofSetColor(255);
+        ofDrawCircle(pos.x, pos.y, size * 1.1);
     
-    ofSetColor(255);
-    ofDrawBitmapString(text, pos.x + dimensions.x/2 - dimensions.x/text.length()/1.5, pos.y + dimensions.y/2);
+        ofSetColor(175);
+        ofDrawCircle(pos.x, pos.y, size);
+
+        img.draw(pos.x-size/2, pos.y-size/2);
+    
+        if(!on && stateButton)
+        {
+            ofPushMatrix();
+            ofTranslate(pos.x, pos.y);
+            ofRotate(45);
+            ofSetLineWidth(3);
+            ofSetColor(255);
+            ofDrawLine(0, -size, 0, size);
+            ofPopMatrix();
+        }
+    }
 }
 
 bool Button::isPressed(int x, int y)
 {
-    if(x >= pos.x && x <= pos.x + dimensions.x && y >= pos.y && y <= pos.y + dimensions.y)
+    if(ofDist(x, y, pos.x, pos.y) < size)
     {
         return true;
     }

@@ -18,6 +18,7 @@
 		1F7CB76E0A460BDBDC54BFFD /* ofxCvFloatImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C0136C36FEDBD16838070E /* ofxCvFloatImage.cpp */; };
 		22347A0FB2F9095BC6F4EC5F /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F51C99FD414ED61EA0F9C39 /* ofxButton.cpp */; };
 		230899BB1A91F4572A69A037 /* Kalman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7307B1DBA6536FDFBEF69E45 /* Kalman.cpp */; };
+		265AB5531EDB285100D4FCD7 /* numberButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 265AB5511EDB285100D4FCD7 /* numberButton.cpp */; };
 		26EE238A1ED6C70300F47EF6 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26EE23881ED6C70300F47EF6 /* button.cpp */; };
 		2BCFE3A705CCF6498C448ADE /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B859DD7FD3EC79D9D850362 /* ofxCvColorImage.cpp */; };
 		2CA0B3532C0476E4FA5AAE55 /* DissolveBlendFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E285A12257DEE71E38231 /* DissolveBlendFilter.cpp */; };
@@ -222,6 +223,8 @@
 		25A55E54278C246CF92434FE /* FDet.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = FDet.cc; path = ../../../Resources/OpenFrameworks/addons/ofxFaceTracker/libs/FaceTracker/src/lib/FDet.cc; sourceTree = SOURCE_ROOT; };
 		25CF350E460C1842A2C30E82 /* type_traits.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = type_traits.hpp; path = ../../../Resources/OpenFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/type_traits.hpp; sourceTree = SOURCE_ROOT; };
 		25E780BB6A092AEA76B28D46 /* TiltShiftFilter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = TiltShiftFilter.h; path = ../../../Resources/OpenFrameworks/addons/ofxFilterLibrary/src/filters/TiltShiftFilter.h; sourceTree = SOURCE_ROOT; };
+		265AB5511EDB285100D4FCD7 /* numberButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numberButton.cpp; sourceTree = "<group>"; };
+		265AB5521EDB285100D4FCD7 /* numberButton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = numberButton.hpp; sourceTree = "<group>"; };
 		26616E512CDD482114878153 /* objdetect.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = objdetect.hpp; path = ../../../Resources/OpenFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect/objdetect.hpp; sourceTree = SOURCE_ROOT; };
 		26EE23881ED6C70300F47EF6 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
 		26EE23891ED6C70300F47EF6 /* button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = button.hpp; sourceTree = "<group>"; };
@@ -1395,6 +1398,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				265AB5511EDB285100D4FCD7 /* numberButton.cpp */,
+				265AB5521EDB285100D4FCD7 /* numberButton.hpp */,
 				7524DFF833BC7251D28A97D4 /* FaceOverlay.h */,
 				26EE23891ED6C70300F47EF6 /* button.hpp */,
 				26EE23881ED6C70300F47EF6 /* button.cpp */,
@@ -1650,6 +1655,7 @@
 				B9A3CD4F386A71C58FAA91C4 /* LaplacianFilter.cpp in Sources */,
 				EC12D323926783724B2839C6 /* LookupFilter.cpp in Sources */,
 				7AA87DA3D873376AAC6AE92E /* LowPassFilter.cpp in Sources */,
+				265AB5531EDB285100D4FCD7 /* numberButton.cpp in Sources */,
 				34C214434CA0917992813A4E /* MotionDetectionFilter.cpp in Sources */,
 				0A30FB470187E68CB1EB1183 /* MultiplyBlendFilter.cpp in Sources */,
 				4A69D2F6B0559D9386D6DB7B /* NormalBlendFilter.cpp in Sources */,

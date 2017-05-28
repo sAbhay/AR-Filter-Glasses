@@ -14,19 +14,25 @@
 
 class Button
 {
-private:
+protected:
     ofVec2f pos;
-    ofVec2f dimensions;
-    string text;
+    float size;
+    ofImage img;
+    bool hidden = false;
+    bool on;
+    bool stateButton;
     
 public:
     Button();
-    Button(float x, float y, float h, string t);
+    Button(float x, float y, float s, string i, bool stateB, bool startState);
     ~Button();
     
     void display();
     
     bool isPressed(int x, int y);
+    void setState(bool s){ on = s;}
+    
+    void setHidden(bool h) {hidden = h;}
 };
 
 #endif /* button_hpp */

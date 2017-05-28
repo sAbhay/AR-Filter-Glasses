@@ -9,6 +9,11 @@ void ofApp::setup()
     ofEnableAlphaBlending();
     cam.initGrabber(1280, 720);
     
+    for(int i = 0; i < 2; i++)
+    {
+        scrollX[i] = 0;
+    }
+    
     ofBackground(0);
 	tracker.setup();
     tracker.reset();
@@ -107,22 +112,42 @@ void ofApp::setup()
     for (float percent=0.0; percent<=1.0; percent+= 0.1)
         colors.push_back( GradientMapColorPoint(ofRandomuf(),ofRandomuf(),ofRandomuf(),percent) );
     _filters.push_back(new GradientMapFilter(colors));
+    
+    b[0] = Button(ofGetWidth()/16, 2*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/video.png", true, false);
+    b[1] = Button(ofGetWidth()/16, 3*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/camera.png", false, false);
+    b[2] = Button(ofGetWidth()/16, 5*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/filter.png", true, false);
+    b[3] = Button(ofGetWidth()/16, 6*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/facetracker.png", true, false);
+    
+    for(int i = 0; i < _filters.size(); i++)
+    {
+//        fb.push_back(NumberButton(scrollX[0] + (ofGetWidth()/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, to_string(i) + ".png", i, _filters[i]->getName()));
+
+        fb.push_back(NumberButton(scrollX[0] + ofGetWidth()/40 + (ofGetWidth()*2.5/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, "buttonImages/filter.png", i, _filters[i]->getName()));
+    }
+    
+    ofLoadImage(img, "base.png");
 }
 
 void ofApp::update() {
 	
     cam.update();
     
-    if(!filtersOn)
+    if(trackerOn)
     {
         if(cam.isFrameNew())
         {
             tracker.update(toCv(cam));
         }
     }
+    
+    if(!drawVideo)
+    {
+        filtersOn = false;
+    }
 }
 
 void ofApp::draw() {
+    
     ofBackground(0, 0, 0);
     ofSetColor(255);
     ofPushMatrix();
@@ -134,55 +159,110 @@ void ofApp::draw() {
         _filters[_currentFilter]->begin();
         cam.draw(0,0);
         _filters[_currentFilter]->end();
-        ofPopMatrix();
-        ofSetColor(255);
-        ofDrawBitmapString( _filters[_currentFilter]->getName() + " Filter\n(Press SPACE to change filters)", ofPoint(40, 20));
     }
-    else
+    
+    if(drawVideo && !filtersOn)
     {
         cam.draw(0, 0);
+    }
+    
+    ofPopMatrix();
         
-        ofPopMatrix();
-        ofSetColor(255);
-        ofDrawBitmapString("Press 'f' to turn on filters", ofPoint(40, 20));
-        
-        ofPushStyle();
-        ofNoFill();
-        ofSetColor(255);
-        ofSetLineWidth(1);
-        //    tracker.getImageMesh().drawWireframe();
-        ofSetLineWidth(2);
+    if(trackerOn)
+    {
         overlay.draw(tracker);
-//        tracker.draw(true);
-        ofPopStyle();
     }
     
     ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+    
+    for(int i = 0; i < 4; i++)
+    {
+        if(ofGetMouseX() < ofGetWidth()/8)
+        {
+            b[i].display();
+        }
+    }
+    
+    for(int i = 0; i < fb.size(); i++)
+    {
+        if(ofGetMouseY() > ofGetHeight()/1.5 && filtersOn)
+        {
+            fb.at(i).display2();
+        }
+    }
 }
 
-void ofApp::keyPressed(int key) {
+void ofApp::keyPressed(int key)
+{
 	if(key == 'r') {
 		tracker.reset();
 	}
-    
-    if (key == OF_KEY_RIGHT) {
-        if(filtersOn)
+}
+
+void ofApp::mouseReleased(int x, int y, int button)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        if(b[i].isPressed(x, y))
         {
-            _currentFilter++;
-            if (_currentFilter >= _filters.size()) _currentFilter = 0;
+            switch(i)
+            {
+                case 0:
+                    drawVideo = !drawVideo;
+                    b[0].setState(drawVideo);
+                    break;
+                    
+                case 1:
+                    for(int j = 0; j < 4; j++)
+                    {
+                       b[j].setHidden(true);
+                    }
+                    
+                    ofHideCursor();
+                    
+                    img.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+                    img.save("screenshot.png");
+                    
+                    ofShowCursor();
+                    
+                    for(int j = 0; j < 4; j++)
+                    {
+                        b[j].setHidden(false);
+                    }
+                    break;
+                    
+                case 2:
+                    filtersOn = !filtersOn;
+                    b[2].setState(filtersOn);
+                    break;
+                    
+                case 3:
+                    trackerOn = !trackerOn;
+                    b[3].setState(trackerOn);
+                    break;
+            }
         }
     }
-    else if(key == OF_KEY_LEFT)
+    
+    if(filtersOn)
     {
-        if(filtersOn)
+        for(int i = 0; i < fb.size(); i++)
         {
-            _currentFilter--;
-            if (_currentFilter <= 0) _currentFilter = _filters.size() - 1;
+            if(fb.at(i).isPressed(x, y))
+            {
+                _currentFilter = fb.at(i).getNumber();
+            }
         }
     }
-    
-    else if (key=='f')
+}
+
+void ofApp::mouseDragged(int x, int y, int button)
+{
+    if(filtersOn)
     {
-        filtersOn = !filtersOn;
+        if(ofGetMouseY() <= ofGetHeight()/1.2 + ofGetWidth()/25 && ofGetMouseY() >= ofGetHeight()/1.2 - ofGetWidth()/25)
+        {
+            scrollX[0] += ofGetMouseX() - ofGetPreviousMouseX();
+        }
     }
 }
