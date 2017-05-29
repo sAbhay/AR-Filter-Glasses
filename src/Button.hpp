@@ -33,6 +33,8 @@ public:
     void setState(bool s){ on = s;}
     
     void setHidden(bool h) {hidden = h;}
+    void setPos(ofVec2f p){pos = p;};
+    ofVec2f getPos(){return pos;}
 };
 
 #endif /* button_hpp */

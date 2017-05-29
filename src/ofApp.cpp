@@ -19,6 +19,11 @@ void ofApp::setup()
     tracker.reset();
     _currentFilter = 0;
     
+    vector<string> s;
+    s.push_back("overlayImages/eyes/simple.png");
+    
+    overlay = FaceOverlay();
+    
     // here's a simple filter chain
     
     FilterChain * charcoal = new FilterChain(cam.getWidth(), cam.getHeight(), "Charcoal");
@@ -120,9 +125,9 @@ void ofApp::setup()
     
     for(int i = 0; i < _filters.size(); i++)
     {
-//        fb.push_back(NumberButton(scrollX[0] + (ofGetWidth()/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, to_string(i) + ".png", i, _filters[i]->getName()));
+//        fb.push_back(SetButton(scrollX[0] + (ofGetWidth()/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, to_string(i) + ".png", i, _filters[i]->getName()));
 
-        fb.push_back(NumberButton(scrollX[0] + ofGetWidth()/40 + (ofGetWidth()*2.5/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, "buttonImages/filter.png", i, _filters[i]->getName()));
+        fb.push_back(SetButton(scrollX[0] + ofGetWidth()/40 + (ofGetWidth()*2.5/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, "buttonImages/filter.png", i, _filters[i]->getName()));
     }
     
     ofLoadImage(img, "base.png");
@@ -143,6 +148,42 @@ void ofApp::update() {
     if(!drawVideo)
     {
         filtersOn = false;
+    }
+    
+    
+    if(filtersOn)
+    {
+        if(ofGetMousePressed())
+        {
+            if(ofGetMouseY() <= ofGetHeight()/1.2 + ofGetWidth()/25 && ofGetMouseY() >= ofGetHeight()/1.2 - ofGetWidth()/25)
+            {
+                scrollX[0] = ofGetMouseX() - ofGetPreviousMouseX();
+                
+                for(int i = 0; i < fb.size(); i++)
+                {
+                    fb.at(i).setPos(ofVec2f(fb.at(i).getPos().x + scrollX[0], fb.at(i).getPos().y));
+                }
+            }
+        }
+        
+        if((ofGetPreviousMouseY() <= ofGetHeight()/1.2 + ofGetWidth()/25 && ofGetPreviousMouseY() >= ofGetHeight()/1.2 - ofGetWidth()/25) && (ofGetMouseY() > ofGetHeight()/1.2 + ofGetWidth()/25 || ofGetMouseY() < ofGetHeight()/1.2 - ofGetWidth()/25))
+        {
+            for(int i = 0; i < fb.size(); i++)
+            {
+                fb.at(i).resetPos();
+            }
+
+        }
+    }
+    
+    if(picture)
+    {
+        for(int j = 0; j < 4; j++)
+        {
+            b[j].setHidden(true);
+        }
+        
+        ofHideCursor();
     }
 }
 
@@ -171,6 +212,7 @@ void ofApp::draw() {
     if(trackerOn)
     {
         overlay.draw(tracker);
+//        tracker.draw(true);
     }
     
     ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
@@ -189,6 +231,12 @@ void ofApp::draw() {
         {
             fb.at(i).display2();
         }
+    }
+    
+    if(picture)
+    {
+        takeScreenshot();
+        picture = false;
     }
 }
 
@@ -213,22 +261,7 @@ void ofApp::mouseReleased(int x, int y, int button)
                     break;
                     
                 case 1:
-                    for(int j = 0; j < 4; j++)
-                    {
-                       b[j].setHidden(true);
-                    }
-                    
-                    ofHideCursor();
-                    
-                    img.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-                    img.save("screenshot.png");
-                    
-                    ofShowCursor();
-                    
-                    for(int j = 0; j < 4; j++)
-                    {
-                        b[j].setHidden(false);
-                    }
+                    picture = true;
                     break;
                     
                 case 2:
@@ -256,13 +289,15 @@ void ofApp::mouseReleased(int x, int y, int button)
     }
 }
 
-void ofApp::mouseDragged(int x, int y, int button)
+void ofApp::takeScreenshot()
 {
-    if(filtersOn)
+    img.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    img.save("screenshot.png");
+    
+    ofShowCursor();
+    
+    for(int j = 0; j < 4; j++)
     {
-        if(ofGetMouseY() <= ofGetHeight()/1.2 + ofGetWidth()/25 && ofGetMouseY() >= ofGetHeight()/1.2 - ofGetWidth()/25)
-        {
-            scrollX[0] += ofGetMouseX() - ofGetPreviousMouseX();
-        }
+        b[j].setHidden(false);
     }
 }

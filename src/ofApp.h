@@ -4,12 +4,12 @@
 #include "ofxCv.h"
 
 #include "ofxFaceTracker.h"
-#include "FaceOverlay.h"
+#include "FaceOverlay.hpp"
 
 #include "ofxFilterLibrary.h"
 
 #include "button.hpp"
-#include "numberButton.hpp"
+#include "SetButton.hpp"
 
 class ofApp : public ofBaseApp {
 public:
@@ -18,7 +18,6 @@ public:
 	void draw();
 	void keyPressed(int key);
     void mouseReleased(int x, int y, int button);
-    void mouseDragged(int x, int y, int button);
     
 private:
     int                         _currentFilter;
@@ -34,7 +33,10 @@ private:
     
     ofImage img;
     Button b[4]; //to active/deactive filters, face filters, camera, and take a picture
-    vector<NumberButton> fb; //filter buttons
+    vector<SetButton> fb; //filter buttons
     
     float scrollX[2];
+    bool picture;
+    
+    void takeScreenshot();
 };
