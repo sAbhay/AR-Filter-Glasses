@@ -16,11 +16,6 @@ void ofApp::setup()
     tracker.reset();
     _currentFilter = 0;
     
-    vector<string> s;
-    s.push_back("overlayImages/eyes/simple.png");
-    
-    overlay = FaceOverlay();
-    
     _filters.push_back(new KuwaharaFilter(6));
     
     // here's a simple filter chain
@@ -118,8 +113,8 @@ void ofApp::setup()
     
     b[0] = Button(ofGetWidth()/16, 2*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/video.png", true, false);
     b[1] = Button(ofGetWidth()/16, 3*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/camera.png", false, false);
-    b[2] = Button(ofGetWidth()/16, 5*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/filter.png", true, false);
-    b[3] = Button(ofGetWidth()/16, 6*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/facetracker.png", true, false);
+    b[2] = Button(ofGetWidth()/16, 4.5*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/filter.png", true, false);
+    b[3] = Button(ofGetWidth()/16, 5.5*ofGetHeight()/8, ofGetWidth()/50, "buttonImages/facetracker.png", true, false);
     
     for(int i = 0; i < _filters.size(); i++)
     {
@@ -140,17 +135,18 @@ void ofApp::setup()
     ff[7] = FaceFeature(ofxFaceTracker::LEFT_EYEBROW, 7);
     
     string names[8] = {"Face", "Left Eye", "Right Eye", "Lips", "Mouth", "Nose", "Right Eyebrow", "Left Eyebrow"};
+    string images[8] = {"buttonImages/face.png", "buttonImages/eye.png", "buttonImages/eye.png", "buttonImages/lips.png", "buttonImages/mouth.png", "buttonImages/nose.png", "buttonImages/right_eyebrow.png", "buttonImages/left_eyebrow.png"};
     
     for(int i = 0; i < 8; i++)
     {
-        ffb[i] = SetButton(15*ofGetWidth()/16, ofGetHeight()/6 + (i*ofGetHeight()/12), ofGetWidth()/50, "buttonImages/facetracker.png", i, names[i]);
+        ffb[i] = SetButton(15*ofGetWidth()/16, ofGetHeight()/8 + (i*ofGetHeight()/12), ofGetWidth()/50, images[i], i, names[i]);
         
         ffSelect[i] = false;
         
-        ffButton[i] = Button(0.9*ofGetWidth(), 2*ofGetHeight()/3, ofGetWidth()/50, "buttonImages/filter.png", false, false);
+        ffButton[i] = Button(0.9*ofGetWidth(), 0.75*ofGetHeight(), ofGetWidth()/50, "buttonImages/filter.png", false, false);
     }
     
-    done = Button(0.9*ofGetWidth(), 0.8*ofGetHeight(), ofGetWidth()/50, "buttonImages/done.png", false, false);
+    done = Button(0.9*ofGetWidth(), 0.9*ofGetHeight(), ofGetWidth()/50, "buttonImages/done.png", false, false);
 }
 
 void ofApp::update() {
@@ -347,13 +343,16 @@ void ofApp::mouseReleased(int x, int y, int button)
     
     if(trackerOn)
     {
-        for(int i = 0; i < 8; i++)
+        if(!consoleDrawing)
         {
-            if(ffb[i].isPressed(x, y))
+            for(int i = 0; i < 8; i++)
             {
-                ffSelect[i] = true;
-                consoleDrawing = true;
-                index = i;
+                if(ffb[i].isPressed(x, y))
+                {
+                    ffSelect[i] = true;
+                    consoleDrawing = true;
+                    index = i;
+                }
             }
         }
         

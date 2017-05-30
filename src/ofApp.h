@@ -4,7 +4,6 @@
 #include "ofxCv.h"
 
 #include "ofxFaceTracker.h"
-#include "FaceOverlay.hpp"
 
 #include "ofxFilterLibrary.h"
 
@@ -27,7 +26,6 @@ private:
     
     ofVideoGrabber cam;
     ofxFaceTracker tracker;
-    FaceOverlay overlay;
     
     bool filtersOn = false;
     bool trackerOn = false;

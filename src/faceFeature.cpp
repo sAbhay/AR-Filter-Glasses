@@ -16,7 +16,7 @@ FaceFeature::FaceFeature()
 FaceFeature::FaceFeature(ofxFaceTracker::Feature f, int i)
 {
     feature = f;
-    colour = ofColor(ofRandom(255), 128);
+    colour = ofColor(ofRandom(255), ofRandom(255), ofRandom(255), ofRandom(255));
     filter = NULL;
     
     index = i;
