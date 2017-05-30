@@ -29,6 +29,8 @@ class SetButton: public Button
         int getNumber(){return num;}
         bool change(){return c;}
     
+        string getName(){return name;}
+    
         void display2();
         void resetPos(){pos = initPos;};
 };

@@ -139,7 +139,7 @@ void ofApp::setup()
     ff[6] = FaceFeature(ofxFaceTracker::RIGHT_EYEBROW, 6);
     ff[7] = FaceFeature(ofxFaceTracker::LEFT_EYEBROW, 7);
     
-    string names[8] = {"Face", "Right Eye", "Left Eye", "Lips", "Mouth", "Nose", "Right Eyebrow", "Left Eyebrow"};
+    string names[8] = {"Face", "Left Eye", "Right Eye", "Lips", "Mouth", "Nose", "Right Eyebrow", "Left Eyebrow"};
     
     for(int i = 0; i < 8; i++)
     {
@@ -274,7 +274,7 @@ void ofApp::draw() {
         for(int i = 0; i < 8; i++)
         {
             {
-                ffb[i].display2();
+                ffb[i].display();
             }
         }
     }
@@ -363,7 +363,14 @@ void ofApp::mouseReleased(int x, int y, int button)
             {
                 if(ffButton[index].isPressed(x, y))
                 {
-                    fffSelect = true;
+                    if(ff[index].getFilter() != NULL)
+                    {
+                        ff[index].setFilter(NULL);
+                    }
+                    else
+                    {
+                        fffSelect = true;
+                    }
                 }
                 
                 if(done.isPressed(x, y))
@@ -397,8 +404,48 @@ void ofApp::console(int i)
 {
     ofFill();
     ofSetColor(ff[i].getColor());
-    ofDrawRectangle(0.80*ofGetWidth(), 0, ofGetWidth() * 0.20, ofGetHeight());
+    ofDrawRectangle(0.80*ofGetWidth(), 0, ofGetWidth()*0.20, ofGetHeight());
     
     ffButton[i].display();
     done.display();
+    
+    ofSetColor(255);
+    ofDrawRectangle(0.825*ofGetWidth(), 0.05*ofGetHeight(), 0.15*ofGetWidth(), 0.075*ofGetHeight());
+    
+    ofSetColor(0);
+    ofDrawBitmapString(ffb[index].getName(), 0.85*ofGetWidth(), 0.05*ofGetHeight() + 0.0375*ofGetHeight());
+    
+    ofColor c = ff[index].getColor();
+    
+    float colorAttributes[4] = {static_cast<float>(c.r), static_cast<float>(c.g), static_cast<float>(c.b), static_cast<float>(c.a)};
+    
+    for(int i = 1; i < 5; i++)
+    {
+        ofPoint low = ofPoint(0.80*ofGetWidth() + i*ofGetWidth()*0.20/5, ofGetHeight()/5);
+        ofPoint high = ofPoint(0.80*ofGetWidth() + i*ofGetWidth()*0.20/5, ofGetHeight()/5 + (ofGetHeight()/720)*255);
+    
+        ofSetColor(255 - ff[index].getColor().r, 255 - ff[index].getColor().g, 255 - ff[index].getColor().b);
+        ofDrawLine(low, high);
+        
+        ofFill();
+        ofSetColor(0);
+        
+        ofDrawRectangle(low.x - ofGetWidth()/150, high.y - ofMap(colorAttributes[i-1], 0, 255, 0, (ofGetHeight()/720)*255), ofGetWidth()/75, ofGetHeight()/100);
+        
+        ofNoFill();
+        ofSetColor(255);
+        
+        ofDrawRectangle(low.x - ofGetWidth()/150, high.y - ofMap(colorAttributes[i-1], 0, 255, 0, (ofGetHeight()/720)*255), ofGetWidth()/75, ofGetHeight()/100);
+
+        
+        if(ofGetMousePressed())
+        {
+            if(ofGetMouseX() >= low.x - ofGetWidth()/150 && ofGetMouseX() <= low.x + ofGetWidth()/150 && ofGetMouseY() <= 1.1*high.y && ofGetMouseY() >= 0.9*low.y)
+            {
+                colorAttributes[i-1] = ofMap(-ofGetMouseY() + low.y, 0, 255, 0, (ofGetHeight()/720)*255);
+                
+                ff[index].setColor(ofColor(colorAttributes[0], colorAttributes[1], colorAttributes[2], colorAttributes[3]));
+            }
+        }
+    }
 }
