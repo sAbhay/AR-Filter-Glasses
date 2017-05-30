@@ -20,6 +20,7 @@
 		230899BB1A91F4572A69A037 /* Kalman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7307B1DBA6536FDFBEF69E45 /* Kalman.cpp */; };
 		260032711EDBE85D001B0085 /* FaceOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2600326F1EDBE85D001B0085 /* FaceOverlay.cpp */; };
 		265AB5531EDB285100D4FCD7 /* setButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 265AB5511EDB285100D4FCD7 /* setButton.cpp */; };
+		26EAC1111EDD1CC600EE5074 /* faceFeature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26EAC10F1EDD1CC600EE5074 /* faceFeature.cpp */; };
 		26EE238A1ED6C70300F47EF6 /* button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26EE23881ED6C70300F47EF6 /* button.cpp */; };
 		2BCFE3A705CCF6498C448ADE /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B859DD7FD3EC79D9D850362 /* ofxCvColorImage.cpp */; };
 		2CA0B3532C0476E4FA5AAE55 /* DissolveBlendFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E285A12257DEE71E38231 /* DissolveBlendFilter.cpp */; };
@@ -229,6 +230,8 @@
 		265AB5511EDB285100D4FCD7 /* setButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = setButton.cpp; sourceTree = "<group>"; };
 		265AB5521EDB285100D4FCD7 /* setButton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = setButton.hpp; sourceTree = "<group>"; };
 		26616E512CDD482114878153 /* objdetect.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = objdetect.hpp; path = ../../../Resources/OpenFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect/objdetect.hpp; sourceTree = SOURCE_ROOT; };
+		26EAC10F1EDD1CC600EE5074 /* faceFeature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = faceFeature.cpp; sourceTree = "<group>"; };
+		26EAC1101EDD1CC600EE5074 /* faceFeature.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = faceFeature.hpp; sourceTree = "<group>"; };
 		26EE23881ED6C70300F47EF6 /* button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = button.cpp; sourceTree = "<group>"; };
 		26EE23891ED6C70300F47EF6 /* button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = button.hpp; sourceTree = "<group>"; };
 		27173BFC5A986B011750DD6D /* warp_shuffle.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = warp_shuffle.hpp; path = ../../../Resources/OpenFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/warp_shuffle.hpp; sourceTree = SOURCE_ROOT; };
@@ -1403,6 +1406,8 @@
 				265AB5511EDB285100D4FCD7 /* setButton.cpp */,
 				265AB5521EDB285100D4FCD7 /* setButton.hpp */,
 				2600326F1EDBE85D001B0085 /* FaceOverlay.cpp */,
+				26EAC10F1EDD1CC600EE5074 /* faceFeature.cpp */,
+				26EAC1101EDD1CC600EE5074 /* faceFeature.hpp */,
 				260032701EDBE85D001B0085 /* FaceOverlay.hpp */,
 				26EE23891ED6C70300F47EF6 /* button.hpp */,
 				26EE23881ED6C70300F47EF6 /* button.cpp */,
@@ -1608,6 +1613,7 @@
 				5C881E5AC3D6996BF23125EB /* PDM.cc in Sources */,
 				8E67DD25BFBF26F8BF90041C /* Tracker.cc in Sources */,
 				93AD644381760C335D902B7D /* Abstract3x3ConvolutionFilter.cpp in Sources */,
+				26EAC1111EDD1CC600EE5074 /* faceFeature.cpp in Sources */,
 				9040AB8F142722EA79B5FA0C /* Abstract3x3PingPongFilter.cpp in Sources */,
 				632286A0ECE4457BC97595D4 /* Abstract3x3TextureSamplingFilter.cpp in Sources */,
 				ABBE765CD5A3A52CA0AD5A46 /* AbstractDoGFilter.cpp in Sources */,

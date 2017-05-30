@@ -36,23 +36,27 @@ void FaceOverlay::drawCurve(const ofPolyline& polyline)
 void FaceOverlay::draw(ofxFaceTracker& tracker)
 {
     ofFill();
-    ofSetColor(255, 0, 0);
-//    drawCurve(tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE));
-//    drawCurve(tracker.getImageFeature(ofxFaceTracker::LEFT_EYE));
+    ofSetColor(0);
+    drawCurve(tracker.getImageFeature(ofxFaceTracker::FACE_OUTLINE));
 
-    vector<ofVec3f> points[2];
-    points[0] = tracker.getImageFeature(ofxFaceTracker::ALL_FEATURES).getVertices();
-//    points[1] = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE).getVertices();
+    ofFill();
+    ofSetColor(255, 0, 0);
+    drawCurve(tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE));
+    drawCurve(tracker.getImageFeature(ofxFaceTracker::LEFT_EYE));
+}
+
+void FaceOverlay::drawFeature(ofxFaceTracker& tracker, ofxFaceTracker::Feature feature, ofColor c)
+{
+    ofFill();
+    ofSetColor(c);
+    drawCurve(tracker.getImageFeature(feature));
+}
+
+void FaceOverlay::drawFeature(ofxFaceTracker& tracker, ofxFaceTracker::Feature feature, ofColor c, AbstractFilter* filter)
+{
+    filter -> begin();
     
-    for(int i = 0; i < 1; i++)
-    {
-        ofBeginShape();
-        
-        for(int j = 0; j < points[i].size(); j++)
-        {
-            ofVertex(points[i].at(j));
-        }
-        
-        ofEndShape();
-    }
+    drawFeature(tracker, feature, c);
+    
+    filter -> end();
 }

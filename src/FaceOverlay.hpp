@@ -14,6 +14,7 @@
 #include "ofMain.h"
 #include "ofxFaceTracker.h"
 #include "ofxTiming.h"
+#include "ofxFilterLibrary.h"
 
 class FaceOverlay {
 private:
@@ -27,6 +28,8 @@ public:
     ~FaceOverlay();
     
     void draw(ofxFaceTracker& tracker);
+    void drawFeature(ofxFaceTracker& tracker, ofxFaceTracker::Feature feature, ofColor c);
+    void drawFeature(ofxFaceTracker& tracker, ofxFaceTracker::Feature feature, ofColor c, AbstractFilter* filter);
 };
 
 

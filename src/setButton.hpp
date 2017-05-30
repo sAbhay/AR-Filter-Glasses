@@ -17,17 +17,17 @@ class SetButton: public Button
     private:
         int num;
         string name;
-        string loc;
+        bool c;
     
         ofVec2f initPos;
     
     public:
         SetButton();
         SetButton(float x, float y, float s, string i, int n, string Name);
-        SetButton(float x, float y, float s, string i, string l, string Name);
+        SetButton(float x, float y, float s, string i, bool l, string Name);
     
         int getNumber(){return num;}
-        string getLoc(){return loc;}
+        bool change(){return c;}
     
         void display2();
         void resetPos(){pos = initPos;};

@@ -9,10 +9,7 @@ void ofApp::setup()
     ofEnableAlphaBlending();
     cam.initGrabber(1280, 720);
     
-    for(int i = 0; i < 2; i++)
-    {
-        scrollX[i] = 0;
-    }
+    scrollX = 0;
     
     ofBackground(0);
 	tracker.setup();
@@ -23,6 +20,8 @@ void ofApp::setup()
     s.push_back("overlayImages/eyes/simple.png");
     
     overlay = FaceOverlay();
+    
+    _filters.push_back(new KuwaharaFilter(6));
     
     // here's a simple filter chain
     
@@ -36,7 +35,6 @@ void ofApp::setup()
     
     _filters.push_back(new HalftoneFilter(cam.getWidth(), cam.getHeight(), 0.01));
     _filters.push_back(new CrosshatchFilter(cam.getWidth(), cam.getHeight()));
-    _filters.push_back(new KuwaharaFilter(6));
     _filters.push_back(new SobelEdgeDetectionFilter(cam.getWidth(), cam.getHeight()));
     _filters.push_back(new BilateralFilter(cam.getWidth(), cam.getHeight()));
     _filters.push_back(new SketchFilter(cam.getWidth(), cam.getHeight()));
@@ -127,10 +125,32 @@ void ofApp::setup()
     {
 //        fb.push_back(SetButton(scrollX[0] + (ofGetWidth()/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, to_string(i) + ".png", i, _filters[i]->getName()));
 
-        fb.push_back(SetButton(scrollX[0] + ofGetWidth()/40 + (ofGetWidth()*2.5/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, "buttonImages/filter.png", i, _filters[i]->getName()));
+        fb.push_back(SetButton(scrollX + ofGetWidth()/40 + (ofGetWidth()*2.5/_filters.size()*i), ofGetHeight()/1.2, ofGetWidth()/50, "buttonImages/filter.png", i, _filters[i]->getName()));
     }
     
     ofLoadImage(img, "base.png");
+    
+    ff[0] = FaceFeature(ofxFaceTracker::FACE_OUTLINE, 0);
+    ff[1] = FaceFeature(ofxFaceTracker::RIGHT_EYE, 1);
+    ff[2] = FaceFeature(ofxFaceTracker::LEFT_EYE, 2);
+    ff[3] = FaceFeature(ofxFaceTracker::OUTER_MOUTH, 3);
+    ff[4] = FaceFeature(ofxFaceTracker::INNER_MOUTH, 4);
+    ff[5] = FaceFeature(ofxFaceTracker::NOSE_BRIDGE, 5);
+    ff[6] = FaceFeature(ofxFaceTracker::RIGHT_EYEBROW, 6);
+    ff[7] = FaceFeature(ofxFaceTracker::LEFT_EYEBROW, 7);
+    
+    string names[8] = {"Face", "Right Eye", "Left Eye", "Lips", "Mouth", "Nose", "Right Eyebrow", "Left Eyebrow"};
+    
+    for(int i = 0; i < 8; i++)
+    {
+        ffb[i] = SetButton(15*ofGetWidth()/16, ofGetHeight()/6 + (i*ofGetHeight()/12), ofGetWidth()/50, "buttonImages/facetracker.png", i, names[i]);
+        
+        ffSelect[i] = false;
+        
+        ffButton[i] = Button(0.9*ofGetWidth(), 2*ofGetHeight()/3, ofGetWidth()/50, "buttonImages/filter.png", false, false);
+    }
+    
+    done = Button(0.9*ofGetWidth(), 0.8*ofGetHeight(), ofGetWidth()/50, "buttonImages/done.png", false, false);
 }
 
 void ofApp::update() {
@@ -151,17 +171,17 @@ void ofApp::update() {
     }
     
     
-    if(filtersOn)
+    if(filtersOn || trackerOn)
     {
         if(ofGetMousePressed())
         {
             if(ofGetMouseY() <= ofGetHeight()/1.2 + ofGetWidth()/25 && ofGetMouseY() >= ofGetHeight()/1.2 - ofGetWidth()/25)
             {
-                scrollX[0] = ofGetMouseX() - ofGetPreviousMouseX();
+                scrollX = ofGetMouseX() - ofGetPreviousMouseX();
                 
                 for(int i = 0; i < fb.size(); i++)
                 {
-                    fb.at(i).setPos(ofVec2f(fb.at(i).getPos().x + scrollX[0], fb.at(i).getPos().y));
+                    fb.at(i).setPos(ofVec2f(fb.at(i).getPos().x + scrollX, fb.at(i).getPos().y));
                 }
             }
         }
@@ -172,7 +192,6 @@ void ofApp::update() {
             {
                 fb.at(i).resetPos();
             }
-
         }
     }
     
@@ -211,25 +230,52 @@ void ofApp::draw() {
         
     if(trackerOn)
     {
-        overlay.draw(tracker);
+//        overlay.draw(tracker);
+
 //        tracker.draw(true);
+
+        for(int i = 0; i < 8; i++)
+        {
+            ff[i].draw(tracker);
+        }
     }
     
     ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
     
-    for(int i = 0; i < 4; i++)
+    if(ofGetMouseX() < ofGetWidth()/8)
     {
-        if(ofGetMouseX() < ofGetWidth()/8)
+        for(int i = 0; i < 4; i++)
         {
             b[i].display();
         }
     }
     
-    for(int i = 0; i < fb.size(); i++)
+    if(ofGetMouseY() > ofGetHeight()/1.5 && (filtersOn || fffSelect))
     {
-        if(ofGetMouseY() > ofGetHeight()/1.5 && filtersOn)
+        for(int i = 0; i < fb.size(); i++)
         {
             fb.at(i).display2();
+        }
+    }
+    
+    if(ofGetMouseX() >= 3*ofGetWidth()/4)
+    {
+        if(index != -10)
+        {
+            if(ffSelect[index])
+            {
+                console(index);
+            }
+        }
+    }
+    
+    if(trackerOn && ofGetMouseX() >= 3*ofGetWidth()/4 && !consoleDrawing)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            {
+                ffb[i].display2();
+            }
         }
     }
     
@@ -242,7 +288,8 @@ void ofApp::draw() {
 
 void ofApp::keyPressed(int key)
 {
-	if(key == 'r') {
+	if(key == 'r')
+    {
 		tracker.reset();
 	}
 }
@@ -277,13 +324,57 @@ void ofApp::mouseReleased(int x, int y, int button)
         }
     }
     
-    if(filtersOn)
+    if(filtersOn || trackerOn)
     {
         for(int i = 0; i < fb.size(); i++)
         {
             if(fb.at(i).isPressed(x, y))
             {
-                _currentFilter = fb.at(i).getNumber();
+                if(!fffSelect)
+                {
+                    _currentFilter = fb.at(i).getNumber();
+                }
+                else
+                {
+                    fffindex = fb.at(i).getNumber();
+                    if(index != -10) ff[index].setFilter(_filters.at(fffindex));
+                    
+//                    fffSelect = false;
+                }
+            }
+        }
+    }
+    
+    if(trackerOn)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            if(ffb[i].isPressed(x, y))
+            {
+                ffSelect[i] = true;
+                consoleDrawing = true;
+                index = i;
+            }
+        }
+        
+        if(index != -10)
+        {
+            if(consoleDrawing)
+            {
+                if(ffButton[index].isPressed(x, y))
+                {
+                    fffSelect = true;
+                }
+                
+                if(done.isPressed(x, y))
+                {
+                    fffSelect = false;
+                    
+                    ffSelect[index] = false;
+                    consoleDrawing = false;
+                    
+                    index = -10;
+                }
             }
         }
     }
@@ -300,4 +391,14 @@ void ofApp::takeScreenshot()
     {
         b[j].setHidden(false);
     }
+}
+
+void ofApp::console(int i)
+{
+    ofFill();
+    ofSetColor(ff[i].getColor());
+    ofDrawRectangle(0.80*ofGetWidth(), 0, ofGetWidth() * 0.20, ofGetHeight());
+    
+    ffButton[i].display();
+    done.display();
 }

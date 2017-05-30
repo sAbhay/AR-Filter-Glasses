@@ -27,7 +27,7 @@ SetButton::SetButton(float x, float y, float s, string i, int n, string Name)
     name = Name;
 }
 
-SetButton::SetButton(float x, float y, float s, string i, string l, string Name)
+SetButton::SetButton(float x, float y, float s, string i, bool l, string Name)
 {
     pos = ofVec2f(x, y);
     size = s;
@@ -37,7 +37,7 @@ SetButton::SetButton(float x, float y, float s, string i, string l, string Name)
     img.resize(size, size);
     
     stateButton = false;
-    loc = l;
+    c = l;
     name = Name;
 }
 
