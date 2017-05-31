@@ -1,4 +1,4 @@
-# VR-Filter
+# Filter Goggles
 VR implementation of filtered camera image
 <h1>Description </h1>
 <h2>What Is It? </h2>
